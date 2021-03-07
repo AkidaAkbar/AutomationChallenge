@@ -1,8 +1,7 @@
 package utils;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
@@ -10,6 +9,8 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.safari.SafariDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class Driver {
     private static WebDriver driver;
@@ -74,10 +75,50 @@ public class Driver {
         return getDriver(null);
     }
 
-    public  static void closeDriver() {
+    public static void closeDriver() {
         if (driver != null) {
             driver.quit();
             driver = null;
         }
     }
+
+    public static Object executeJavaScriptFunctionOnPage(String scriptToExecute, WebElement elementToRunScriptAgainst) {
+        Object res = null;
+
+        try {
+            if (Driver.getDriver() instanceof JavascriptExecutor) {
+                JavascriptExecutor js = (JavascriptExecutor) Driver.getDriver();
+                if (elementToRunScriptAgainst != null) {
+                    res = js.executeScript(scriptToExecute, new Object[]{elementToRunScriptAgainst});
+                } else {
+                    res = js.executeScript(scriptToExecute, new Object[0]);
+                }
+
+                if (res != null) {
+                    System.out.println(" -- Javascript executed successfully: " + res.toString());
+                }
+            } else {
+                System.out.println("The driver you passed as parameter to function executeJavaScriptFunctionOnPage cannot run JavaScript, because the executor is not instanciated. Make sur that your driver allows you and is capabale of running java script.");
+            }
+        } catch (StaleElementReferenceException var5) {
+            System.out.println("ERROR in function executeJavaScriptFunctionOnPage: StaleElementException");
+        } catch (Exception var6) {
+            System.out.println("ERROR in function executeJavaScriptFunctionOnPage:: " + var6.getMessage() + "\r\n" + var6.getLocalizedMessage() + "\r\n" + var6.toString());
+        }
+
+        return res;
+    }
+
+
+    public static void scrollIntoMiddleView(WebElement pElement) {
+        System.out.println("Scroll scroll into middle view [" + pElement.getText() + "].");
+        executeJavaScriptFunctionOnPage("window.scrollTo(0,(arguments[0].getBoundingClientRect().top + window.pageYOffset) - (window.innerHeight / 2));", pElement);
+    }
+
+    public static void wait(By byField) {
+        WebDriverWait wait = new WebDriverWait(Driver.getDriver(), Integer.parseInt(ConfigurationReader.getProperty("explicitWait")));
+        wait.until(ExpectedConditions.elementToBeClickable(byField));
+    }
+
+
 }

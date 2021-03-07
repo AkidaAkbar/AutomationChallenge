@@ -21,12 +21,12 @@ public class ConfigurationReader {
             configFile.load(input);
             //close input stream
             input.close();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static String getProperty(String key){
+    public static String getProperty(String key) {
         return configFile.getProperty(key);
     }
 
