@@ -17,7 +17,7 @@ public class HomePage {
     private static final By LIST_GROUP = xpath("//ul[@class='list-group']/li");
     private static final By LIST_GROUP_BADGE = xpath("./span");
     private static final By DROPDOWN_LIST = xpath("//*[@id='dropdownMenuButton']");
-    private static final By OPTION_THREE = xpath("//*[@id='test-3-div']/div/div/a[3]");
+    private static final By OPTION_THREE = xpath("//a[text()='Option 3']");
     private static final By BUTTON_ENABLED = xpath("//button[@class='btn btn-lg btn-primary']");
     private static final By BUTTON_DISABLED = xpath("//button[@class='btn btn-lg btn-secondary']");
     private static final By BUTTON = xpath("//*[@id='test5-button']");
